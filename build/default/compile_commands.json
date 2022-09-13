@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/dajek/eclipse-workspace/TIETO_C/build/default",
+  "command": "/usr/bin/cc    -o CMakeFiles/TIETO_C.dir/TIETO_C.c.o -c /home/dajek/eclipse-workspace/TIETO_C/TIETO_C.c",
+  "file": "/home/dajek/eclipse-workspace/TIETO_C/TIETO_C.c"
+}
+]

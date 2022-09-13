@@ -1,0 +1,3 @@
+/home/dajek/eclipse-workspace/TIETO_C/build/default/CMakeFiles/TIETO_C.dir
+/home/dajek/eclipse-workspace/TIETO_C/build/default/CMakeFiles/edit_cache.dir
+/home/dajek/eclipse-workspace/TIETO_C/build/default/CMakeFiles/rebuild_cache.dir
