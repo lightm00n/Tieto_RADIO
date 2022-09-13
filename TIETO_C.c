@@ -4,42 +4,51 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+#include "calculating_cpu.c"
+#include "showing_data.c"
 
-struct imp_datas { 					// struktura globalna, tam skladujemy dane
-	int table_of_data[100][100];			// wczytane dane z proc/stat
-	int saved_datas[100];			// tablica z obliczonym zuzyciem do pozniejszego wyswietlenia danych
+struct imp_datas { 					// struktura globalna, tam beda skladowane dane ze proc/stat.
+
+	long cpu_user;
+	long cpu_nice;
+	long cpu_system;
+	long cpu_idle;
+	long cpu_iowait;
+	long cpu_irq;
+	long cpu_softirq;
+	long cpu_usage_result;
 };
-//int results[100];
-void *readData(void *args) ///funkcja do wczytywania pliku stat/proc cmake 2.6
+
+void *readData(void *number_of_cpu) //funkcja do wczytywania pliku stat/proc cmake 2.6
 {
-	FILE* our_stat;
-	our_stat = fopen("/proc/stat", "r");
-	if (our_stat == NULL)
+	FILE *readingdata = fopen("proc/stat", "r");
+	if (readingdata == NULL)
 	{
-		printf("Problem to read file");
-		exit(0);
+		fprintf(stderr, "Problem with open file");
+		exit(1);
 	}
-	struct imp_datas values;
-	int temp_array[100];
-	int i = 0;
+	struct imp_datas *load_data;
+	int load_skip = number_of_cpu+1;
+	int counter = 0;
+	    char character;
+	    while((counter < load_skip) && ((character = getc(readingdata)) != EOF))
+	    {
+	        if (character == '\n')
+	        	counter++;
+	    }
+	char temp_array[255];
+	fscanf(readingdata, "%d %d %d %d %d %d %d %d %d %d", &(load_data->cpu_user), &(load_data ->cpu_nice), &(load_data->cpu_system),
+			&(load_data->cpu_idle), &(load_data->cpu_iowait), &(load_data->cpu_irq), &(load_data->cpu_softirq));
+	fclose(readingdata);
 
-	fscanf(our_stat, "%d," ,&temp_array[i]);
-
-	for (i = 0; i < 100; i++){
-		values.table_of_data[i] = temp_array[i];
-	}
-	//for (i = 0; i < 100; i++){
-			printf("%d,", values.table_of_data[i]);
-		//}
 }
 
 void main(void)
 {
-	pthread_t thread_Reader;// 1 watek - Reader, on otrzyma funkcje
-	pthread_create(&thread_Reader, NULL, &readData, NULL);
-	printf("Postał wątek.");
-	pthread_join(thread_Reader, NULL);
-// 2 watek ktory bedzie liczyl
 
-// itd. wg zadania
+
+
+
+
 }
