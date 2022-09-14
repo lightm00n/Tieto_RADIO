@@ -46,9 +46,11 @@ void *readData(void *number_of_cpu) //funkcja do wczytywania pliku stat/proc cma
 
 void main(void)
 {
+	pthread_t Reader;		//tutaj tworzyy obiekty wątkow
+	pthread_t Analyzer;
+	pthread_t Printer;
 
-
-
+							//tutaj przydzielamy odpowiednie funkcjes
 
 
 }
