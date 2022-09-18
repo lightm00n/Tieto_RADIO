@@ -5,52 +5,70 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "calculating_cpu.c"
-#include "showing_data.c"
+#include "calculating_cpu.h"
+#include "showing_data.h"
 
+//pthread_mutex_t sygnalizacja = PTHREAD_MUTEX_INITIALIZER;
 struct imp_datas { 					// struktura globalna, tam beda skladowane dane ze proc/stat.
 
-	long cpu_user;
-	long cpu_nice;
-	long cpu_system;
-	long cpu_idle;
-	long cpu_iowait;
-	long cpu_irq;
-	long cpu_softirq;
-	long cpu_usage_result;
+	 unsigned int cpu_user;
+	 unsigned int cpu_nice;
+	 unsigned int cpu_system;
+	 unsigned int cpu_idle;
+	 unsigned int cpu_iowait;
+	 unsigned int cpu_irq;
+	 unsigned int cpu_softirq;
+
+	 double cpu_usage_result;			// zapis zuzycia cpu
+
 };
 
-void *readData(void *number_of_cpu) //funkcja do wczytywania pliku stat/proc cmake 2.6
+void *readData() //funkcja do wczytywania pliku stat/proc
 {
-	FILE *readingdata = fopen("proc/stat", "r");
+	//pthread_mutex_lock(&sygnalizacja);
+	FILE *readingdata = fopen("/proc/stat", "r");			//mutexy trzeba dorzucic
 	if (readingdata == NULL)
 	{
-		fprintf(stderr, "Problem with open file");
+		fprintf(stderr, "Problem with open file \n");
 		exit(1);
 	}
 	struct imp_datas *load_data;
+	int number_of_cpu = -1;
 	int load_skip = number_of_cpu+1;
 	int counter = 0;
-	    char character;
-	    while((counter < load_skip) && ((character = getc(readingdata)) != EOF))
-	    {
-	        if (character == '\n')
-	        	counter++;
-	    }
+	char character;
+
+	while((counter < load_skip) && ((character = fgetc(readingdata)) != EOF))
+	{
+	       if (character == '\n')
+	        counter++;
+	}
+
 	char temp_array[255];
-	fscanf(readingdata, "%d %d %d %d %d %d %d %d %d %d", &(load_data->cpu_user), &(load_data ->cpu_nice), &(load_data->cpu_system),
+	fscanf(readingdata, "%s %d %d %d %d %d %d %d", temp_array, &(load_data->cpu_user), &(load_data->cpu_nice), &(load_data->cpu_system),
 			&(load_data->cpu_idle), &(load_data->cpu_iowait), &(load_data->cpu_irq), &(load_data->cpu_softirq));
+	//pthread_mutex_unlock(&sygnalizacja);
 	fclose(readingdata);
+	sleep(2);
 
 }
 
-void main(void)
+int main(int argc, char** argv)
 {
-	pthread_t Reader;		//tutaj tworzyy obiekty wątkow
+
+	pthread_t Reader;		//tutaj tworzy obiekty wątkow
 	pthread_t Analyzer;
 	pthread_t Printer;
 
-							//tutaj przydzielamy odpowiednie funkcjes
+	pthread_create(&Reader, NULL, readData, NULL); //tutaj przydzielamy odpowiednie funkcje
+    //pthread_create(&Analyzer, NULL, *calculating_cpu_z, NULL);
+	//pthread_create(&Printer, NULL, *printing_data_s, NULL);
 
+	void* test;
+	pthread_join(Reader, &test);
+	//pthread_join(Analyzer, &test);
+	//pthread_join(Printer, &test);
 
 }
+
+

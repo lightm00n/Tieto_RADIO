@@ -1,9 +1,11 @@
-#include "TIETO_C.c"
+#include <pthread.h>
+#include "calculating_cpu.h"
 
-double *calculating_cpu()
+void *calculating_cpu_z()
 {
 	struct imp_datas *prev_for_idle, *now_for_idle, *result;
 
+	//pthread_mutex_lock(&sygnalizacja);
 	int prev_idle = (prev_for_idle->cpu_idle) + (now_for_idle->cpu_iowait);
 	int curr_idle = (now_for_idle->cpu_idle) + (now_for_idle->cpu_iowait);
 
@@ -18,6 +20,8 @@ double *calculating_cpu()
 
 	double usage = (1000 * (total_cpud - total_idled) / total_cpud + 1) / 10 ;
 
-	fscanf(usage, "%d", &(result->cpu_usage_result) );
+	fscanf(usage, "%f", &(result->cpu_usage_result) );
 
+	//pthread_mutex_unlock(&sygnalizacja);
 }
+
